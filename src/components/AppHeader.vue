@@ -8,7 +8,7 @@ const navItems = [
   { to: '/tao-chuyen-moi', label: 'Tạo Chuyến Mới' },
   { to: '/giam-sat-ngoai-le', label: 'Giám Sát Ngoại Lệ' },
   { to: '/doi-soat-p-l', label: 'Đối Soát P&L' },
-  { to: '/ban-do-thuy-van', label: 'Bản Đồ Thủy Văn' },
+  { to: '/ship-captain', label: 'Cập nhật chuyến tàu' },
 ]
 </script>
 
