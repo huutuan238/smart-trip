@@ -1,10 +1,14 @@
 <script setup>
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
 const navItems = [
-  { path: 'trang-chu', label: 'Trang Chủ' },
-  { path: 'tao-chuyen-moi', label: 'Tạo Chuyến Mới' },
-  { path: 'giam-sat-ngoai-le', label: 'Giám Sát Ngoại Lệ' },
-  { path: 'doi-soat-p-l', label: 'Đối Soát P&L' },
-  { path: 'ban-do-thuy-van', label: 'Bản Đồ Thủy Văn' },
+  { to: '/', label: 'Trang Chủ' },
+  { to: '/tao-chuyen-moi', label: 'Tạo Chuyến Mới' },
+  { to: '/giam-sat-ngoai-le', label: 'Giám Sát Ngoại Lệ' },
+  { to: '/doi-soat-p-l', label: 'Đối Soát P&L' },
+  { to: '/ban-do-thuy-van', label: 'Bản Đồ Thủy Văn' },
 ]
 </script>
 
@@ -29,19 +33,19 @@ const navItems = [
         </div>
         <div class="h-6 w-[1px] bg-outline-variant/50 hidden lg:block"></div>
         <nav class="hidden xl:flex items-center gap-space-xs">
-          <a
-            v-for="(item, i) in navItems"
-            :key="item.path"
-            href="#"
+          <RouterLink
+            v-for="item in navItems"
+            :key="item.to"
+            :to="item.to"
             :class="[
               'px-space-md py-space-xs rounded-lg font-label-lg text-label-lg transition-colors',
-              i === 1
+              route.path === item.to
                 ? 'bg-primary-container text-on-primary font-semibold shadow-sm'
                 : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface',
             ]"
           >
             {{ item.label }}
-          </a>
+          </RouterLink>
         </nav>
       </div>
       <div class="flex items-center gap-space-md shrink-0">

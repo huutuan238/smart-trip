@@ -20,11 +20,11 @@ const { openModal } = useModalState()
         @click="openModal('vessel', 'Chọn phương tiện thủy')"
       >
         <span class="material-symbols-outlined text-[16px]">swap_horiz</span>
-        Đổi phương tiện
+        {{ vessel ? 'Đổi phương tiện' : 'Chọn phương tiện' }}
       </button>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm items-center">
+    <div v-if="vessel" class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm items-center">
       <div class="sm:col-span-1 rounded bg-surface-container-low p-space-xs flex flex-col items-center text-center">
         <img :src="vessel.img" class="w-full h-24 object-cover rounded shadow-inner mb-space-xs" :alt="vessel.name" />
         <span class="font-headline-sm text-headline-sm text-primary tracking-tight">{{ vessel.name }}</span>
@@ -61,5 +61,15 @@ const { openModal } = useModalState()
         </div>
       </div>
     </div>
+
+    <button
+      v-else
+      type="button"
+      class="w-full flex flex-col items-center justify-center gap-1 py-space-md rounded border-2 border-dashed border-outline-variant text-on-surface-variant hover:bg-surface-container-low hover:text-primary hover:border-primary/40 transition-colors"
+      @click="openModal('vessel', 'Chọn phương tiện thủy')"
+    >
+      <span class="material-symbols-outlined text-[28px]">directions_boat</span>
+      <span class="font-label-lg text-label-lg font-semibold">Chưa chọn phương tiện — bấm để chọn</span>
+    </button>
   </div>
 </template>

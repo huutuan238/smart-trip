@@ -2,21 +2,62 @@
 import { computed } from 'vue'
 import { useTripState } from '../store/tripState'
 
-const { vessel, origin, destination, scenario } = useTripState()
+const {
+  vessel,
+  origin,
+  destination,
+  state,
+  isVesselDone,
+  isCargoDone,
+  isRouteDone,
+  isScheduleDone,
+  currentScenario,
+} = useTripState()
 
-const routeLabel = computed(() => `${origin.value.short} - ${destination.value.short}`)
-const pnlLabel = computed(() => `${scenario.value.profit} (+${scenario.value.profitPctValue.toFixed(0)}%)`)
-const safetyLabel = computed(() => `${scenario.value.safetyScore} Điểm an toàn`)
-const scenarioLabel = computed(() => `Kịch bản ${scenario.value.key} đã chọn`)
-
-const doneSteps = computed(() => [
-  { code: 'B.1', label: 'Đã chọn', value: `Tàu ${vessel.value.name}` },
-  { code: 'B.2', label: 'Xác nhận', value: 'Clinker 400T' },
-  { code: 'B.3', label: 'Tuyến luồng', value: routeLabel.value },
-  { code: 'B.4', label: 'Giờ triều', value: '09:00 - 15/03' },
-  { code: 'B.5', label: 'P&L', value: pnlLabel.value },
-  { code: 'B.6', label: 'Kiểm tra', value: safetyLabel.value },
+const steps = computed(() => [
+  {
+    code: 'B.1',
+    title: 'Phương tiện',
+    done: isVesselDone.value,
+    value: isVesselDone.value ? `Tàu ${vessel.value.name}` : 'Chưa chọn',
+  },
+  {
+    code: 'B.2',
+    title: 'Hàng hoá',
+    done: isCargoDone.value,
+    value: isCargoDone.value ? `${state.cargoType} • ${state.weightTons}T` : 'Chưa nhập',
+  },
+  {
+    code: 'B.3',
+    title: 'Tuyến luồng',
+    done: isRouteDone.value,
+    value: isRouteDone.value ? `${origin.value.short} - ${destination.value.short}` : 'Chưa chọn',
+  },
+  {
+    code: 'B.4',
+    title: 'Giờ rời bến',
+    done: isScheduleDone.value,
+    value: isScheduleDone.value ? `${state.etdTime}${state.etdDate ? ' - ' + state.etdDate : ''}` : 'Chưa nhập',
+  },
+  {
+    code: 'B.5',
+    title: 'P&L',
+    done: !!currentScenario.value,
+    value: currentScenario.value
+      ? `${currentScenario.value.profit >= 0 ? '+' : ''}${(currentScenario.value.profit / 1e6).toFixed(1)}tr`
+      : 'Chưa có dữ liệu',
+  },
+  {
+    code: 'B.6',
+    title: 'An toàn',
+    done: !!currentScenario.value,
+    value: currentScenario.value ? `${currentScenario.value.safetyScore} Điểm an toàn` : 'Chưa kiểm tra',
+  },
 ])
+
+const scenarioLabel = computed(() =>
+  currentScenario.value ? `Kịch bản ${state.scenarioKey} đã chọn` : 'Chưa đủ dữ liệu'
+)
 </script>
 
 <template>
@@ -40,16 +81,29 @@ const doneSteps = computed(() => [
 
       <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-space-xs pt-space-xs">
         <div
-          v-for="step in doneSteps"
+          v-for="step in steps"
           :key="step.code"
-          class="flex items-center gap-space-xs p-space-xs rounded bg-surface-container-low transition-colors"
+          :class="[
+            'flex items-center gap-space-xs p-space-xs rounded transition-colors',
+            step.done ? 'bg-surface-container-low' : 'bg-surface-container-low/50',
+          ]"
         >
-          <div class="w-6 h-6 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shrink-0">
-            <span class="material-symbols-outlined text-[16px]">check</span>
+          <div
+            :class="[
+              'w-6 h-6 rounded-full flex items-center justify-center shrink-0',
+              step.done ? 'bg-tertiary text-on-tertiary' : 'bg-surface-container-high text-on-surface-variant',
+            ]"
+          >
+            <span class="material-symbols-outlined text-[16px]">{{ step.done ? 'check' : 'radio_button_unchecked' }}</span>
           </div>
           <div class="min-w-0">
-            <div class="font-label-sm text-label-sm text-tertiary uppercase leading-none font-semibold">
-              {{ step.code }} {{ step.label }}
+            <div
+              :class="[
+                'font-label-sm text-label-sm uppercase leading-none font-semibold',
+                step.done ? 'text-tertiary' : 'text-on-surface-variant',
+              ]"
+            >
+              {{ step.code }} {{ step.title }}
             </div>
             <div class="font-label-md text-label-md text-on-surface truncate font-medium">
               {{ step.value }}
@@ -58,7 +112,12 @@ const doneSteps = computed(() => [
         </div>
 
         <!-- Step 7: current, active step -->
-        <div class="flex items-center gap-space-xs p-space-xs rounded bg-surface-container-high shadow-sm ring-1 ring-primary/30">
+        <div
+          :class="[
+            'flex items-center gap-space-xs p-space-xs rounded shadow-sm ring-1',
+            currentScenario ? 'bg-surface-container-high ring-primary/30' : 'bg-surface-container-low/50 ring-transparent',
+          ]"
+        >
           <div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0 animate-pulse">
             <span class="material-symbols-outlined text-[16px]">tune</span>
           </div>

@@ -1,7 +1,7 @@
 <script setup>
 import { useTripState } from '../store/tripState'
 
-const { state, SCENARIOS, setScenario } = useTripState()
+const { state, scenarioOptions, isReady, setScenario } = useTripState()
 </script>
 
 <template>
@@ -18,16 +18,20 @@ const { state, SCENARIOS, setScenario } = useTripState()
     </div>
 
     <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-sm">
-      Hệ thống tự động mô phỏng 3 kịch bản vận hành dựa trên thủy triều thực tế, mức mớn nước an toàn và tối ưu hóa lợi nhuận P&amp;L:
+      Hệ thống tự động mô phỏng 3 phương án vận hành dựa trên dữ liệu bạn đã nhập ở Bước 1-4 (tàu, hàng hoá, tuyến, giờ rời bến).
     </p>
 
-    <div class="flex flex-col gap-space-sm">
+    <div v-if="!isReady" class="rounded border-2 border-dashed border-outline-variant p-space-md text-center text-on-surface-variant font-label-md text-label-md">
+      Hoàn thành Bước 1-4 để xem và áp dụng các phương án.
+    </div>
+
+    <div v-else class="flex flex-col gap-space-sm">
       <div
-        v-for="s in SCENARIOS"
-        :key="s.key"
+        v-for="opt in scenarioOptions"
+        :key="opt.key"
         :class="[
           'p-space-sm rounded-lg border-2 transition-colors relative',
-          s.key === state.scenarioKey
+          opt.key === state.scenarioKey
             ? 'border-secondary bg-surface-container-low/60 shadow-sm'
             : 'border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low',
         ]"
@@ -37,7 +41,7 @@ const { state, SCENARIOS, setScenario } = useTripState()
             <span
               :class="[
                 'w-4 h-4 rounded-full shrink-0',
-                s.key === state.scenarioKey
+                opt.key === state.scenarioKey
                   ? 'border-4 border-secondary bg-surface-container-lowest'
                   : 'border border-outline-variant bg-surface-container-lowest',
               ]"
@@ -45,40 +49,43 @@ const { state, SCENARIOS, setScenario } = useTripState()
             <span
               :class="[
                 'font-headline-sm text-[16px]',
-                s.key === state.scenarioKey ? 'text-primary font-bold' : 'text-on-surface font-semibold',
+                opt.key === state.scenarioKey ? 'text-primary font-bold' : 'text-on-surface font-semibold',
               ]"
             >
-              {{ s.title }}
+              {{ opt.title }}
             </span>
           </div>
-          <span :class="[s.tagClass, 'px-2 py-0.5 rounded-full font-label-sm text-[10px] font-bold uppercase tracking-wider shrink-0']">
-            {{ s.tag }}
+          <span :class="[opt.tagClass, 'px-2 py-0.5 rounded-full font-label-sm text-[10px] font-bold uppercase tracking-wider shrink-0']">
+            {{ opt.tag }}
           </span>
         </div>
 
-        <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-xs pl-6">{{ s.desc }}</p>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-xs pl-6">{{ opt.desc }}</p>
 
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs pl-6 py-space-xs">
-          <div :class="[s.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
+        <div v-if="opt.metrics" class="grid grid-cols-2 sm:grid-cols-4 gap-space-xs pl-6 py-space-xs">
+          <div :class="[opt.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
             <span class="font-label-sm text-[10px] text-on-surface-variant block uppercase">Lợi nhuận</span>
-            <span :class="[s.key === state.scenarioKey ? 'text-tertiary' : 'text-primary', 'font-headline-sm text-[15px] font-bold']">
-              {{ s.profit }} <span class="text-[11px] font-semibold">{{ s.profitPct }}</span>
+            <span
+              :class="[opt.metrics.profit >= 0 ? (opt.key === state.scenarioKey ? 'text-tertiary' : 'text-primary') : 'text-error', 'font-headline-sm text-[15px] font-bold']"
+            >
+              {{ opt.metrics.profit >= 0 ? '+' : '' }}{{ (opt.metrics.profit / 1e6).toFixed(1) }}tr
+              <span class="text-[11px] font-semibold">({{ opt.metrics.profitPct >= 0 ? '+' : '' }}{{ opt.metrics.profitPct.toFixed(0) }}%)</span>
             </span>
           </div>
-          <div :class="[s.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
+          <div :class="[opt.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
             <span class="font-label-sm text-[10px] text-on-surface-variant block uppercase">Thời gian chạy</span>
-            <span class="font-headline-sm text-[15px] text-on-surface font-semibold">{{ s.duration }}</span>
+            <span class="font-headline-sm text-[15px] text-on-surface font-semibold">{{ opt.metrics.durationHours.toFixed(1) }}h</span>
           </div>
-          <div :class="[s.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
+          <div :class="[opt.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
             <span class="font-label-sm text-[10px] text-on-surface-variant block uppercase">Mức an toàn</span>
-            <span :class="[s.safetyScore >= 94 ? 'text-tertiary font-bold' : 'text-on-surface font-bold', 'font-headline-sm text-[15px]']">
-              {{ s.safety }}
+            <span :class="[opt.metrics.safetyScore >= 90 ? 'text-tertiary font-bold' : 'text-on-surface font-bold', 'font-headline-sm text-[15px]']">
+              {{ opt.metrics.safetyScore }}/100
             </span>
           </div>
-          <div :class="[s.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
+          <div :class="[opt.key === state.scenarioKey ? 'bg-surface-container-lowest' : 'bg-surface-container-low', 'p-space-xs rounded']">
             <span class="font-label-sm text-[10px] text-on-surface-variant block uppercase">Nhiên liệu</span>
-            <span :class="[s.key === 'C' ? 'text-error' : 'text-on-surface', 'font-headline-sm text-[15px] font-semibold']">
-              {{ s.fuel }}
+            <span :class="[opt.key === 'C' ? 'text-error' : 'text-on-surface', 'font-headline-sm text-[15px] font-semibold']">
+              {{ opt.metrics.fuelLiters.toFixed(0) }}L
             </span>
           </div>
         </div>
@@ -86,24 +93,24 @@ const { state, SCENARIOS, setScenario } = useTripState()
         <div class="flex items-center justify-between pl-6 pt-space-xs mt-1">
           <span
             :class="[
-              s.key === state.scenarioKey ? 'text-secondary font-semibold flex items-center gap-1' : 'text-on-surface-variant',
+              opt.key === state.scenarioKey ? 'text-secondary font-semibold flex items-center gap-1' : 'text-on-surface-variant',
               'font-label-sm text-label-sm',
             ]"
           >
-            <span v-if="s.key === state.scenarioKey" class="material-symbols-outlined text-[16px]">check_circle</span>
-            {{ s.footNote }}
+            <span v-if="opt.key === state.scenarioKey" class="material-symbols-outlined text-[16px]">check_circle</span>
+            {{ opt.footNote }}
           </span>
           <button
             type="button"
-            :disabled="s.key === state.scenarioKey"
+            :disabled="opt.key === state.scenarioKey"
             :class="[
-              s.key === state.scenarioKey
+              opt.key === state.scenarioKey
                 ? 'px-space-sm py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm font-semibold shadow-sm'
                 : 'px-space-sm py-1 rounded bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold transition-colors',
             ]"
-            @click="setScenario(s.key)"
+            @click="setScenario(opt.key)"
           >
-            {{ s.key === state.scenarioKey ? 'Đã chọn' : 'Áp dụng kịch bản' }}
+            {{ opt.key === state.scenarioKey ? 'Đã chọn' : 'Áp dụng phương án' }}
           </button>
         </div>
       </div>

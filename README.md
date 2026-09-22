@@ -83,5 +83,34 @@ kỳ static hosting / Nginx nào — không cần server Node khi chạy.
   config CDN gốc (màu M3, spacing, fontFamily, fontSize, borderRadius).
 - Google Fonts (Inter, Space Grotesk) và Material Symbols Outlined được load
   qua thẻ `<link>` trong `index.html`, giữ nguyên như bản gốc.
-- Toàn bộ logic tương tác (đổi tàu, đổi điểm đi/đến, áp dụng kịch bản A/B/C)
+- Toàn bộ logic tương tác (đổi tàu, đổi điểm đi/đến, áp dụng phương án A/B/C)
   đã được kiểm tra hoạt động đúng qua `npm run build`.
+
+## Luồng nhập liệu (đã cập nhật)
+
+Toàn bộ input bắt đầu **trống** — không còn dữ liệu mẫu dựng sẵn:
+
+1. **Bước 1** – Chọn phương tiện thủy (modal danh sách tàu).
+2. **Bước 2** – Chọn nhóm hàng + nhập khối lượng thực tế + đơn giá hợp đồng.
+3. **Bước 3** – Chọn điểm đi / điểm đến (modal danh sách cảng, cự ly tự tính
+   bằng `|km điểm đến − km điểm đi|` theo dữ liệu `km` gắn với mỗi cảng).
+4. **Bước 4** – Nhập ngày + giờ rời bến dự kiến (ETD).
+
+Ngay khi một trong các input trên thay đổi, **thanh Quy trình (B.1 → B.7)**
+cập nhật trạng thái "Đã chọn / Chưa chọn" tương ứng, và:
+
+- **Bước 5 (P&L)** và **Bước 6 (SmartTrip Check)** tự tính lại doanh thu, chi
+  phí (nhiên liệu, cảng bến, lương thuyền viên, dự phòng), lợi nhuận, tỷ lệ
+  chất tải, mớn nước và điểm an toàn — theo đúng công thức tại
+  `computeScenario()` trong `src/store/tripState.js`.
+- **Bước 7** hiển thị 3 phương án (A: tiêu chuẩn, B: giảm tải, C: tốc độ tối
+  đa) với số liệu tính động cho từng phương án; chọn phương án nào thì Bước
+  4-6 và thanh Quy trình phản ánh ngay phương án đó.
+- Trước khi nhập đủ Bước 1-4, các panel P&L / An toàn / Đề xuất phương án chỉ
+  hiển thị placeholder nhắc hoàn thành các bước trước.
+- Nút **"Nhập Lại Từ Đầu"** ở thanh hành động dưới cùng gọi `resetAll()` để
+  xoá sạch toàn bộ input và quay về trạng thái ban đầu.
+
+Công thức tính toán (giá dầu, hệ số tiêu hao nhiên liệu, phí cảng bến, lương
+theo giờ, ngưỡng an toàn...) được gom vào `CONSTANTS` trong
+`src/data/index.js` — chỉnh 1 chỗ là áp dụng cho toàn bộ ứng dụng.

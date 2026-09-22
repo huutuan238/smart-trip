@@ -1,8 +1,8 @@
 // ---------------------------------------------------------------
-// Dữ liệu mẫu: Phương tiện, Cảng/Bến, Kịch bản
+// Dữ liệu mẫu: Phương tiện, Cảng/Bến, Loại hàng, Phương án vận hành
+// (Không còn số liệu P&L / an toàn cố định — các panel sẽ TỰ TÍNH
+//  từ dữ liệu người dùng nhập ở store/tripState.js)
 // ---------------------------------------------------------------
-
-export const DISTANCE_KM = 68.4
 
 export const VESSELS = [
   {
@@ -47,86 +47,76 @@ export const VESSELS = [
   },
 ]
 
+// `km`: vị trí quy ước dọc hành lang đường thủy (dùng để tính cự ly = |kmA-kmB|)
 export const PORTS = [
-  { id: 'doan-xa', name: 'Bến Cảng Đoạn Xá', sub: 'Hải Phòng • Sông Cấm (Km 00+000)', short: 'Đoạn Xá' },
-  { id: 'pha-lai', name: 'Bến Nhà Máy Phả Lại', sub: 'Hải Dương • Sông Kinh Thầy (Km 68+400)', short: 'Phả Lại' },
-  { id: 'ninh-phuc', name: 'Cảng Ninh Phúc', sub: 'Ninh Bình • Sông Đáy (Km 92+200)', short: 'Ninh Phúc' },
-  { id: 'viet-tri', name: 'Cảng Việt Trì', sub: 'Phú Thọ • Sông Lô (Km 74+000)', short: 'Việt Trì' },
-  { id: 'khuyen-luong', name: 'Cảng Khuyến Lương', sub: 'Hà Nội • Sông Hồng (Km 15+300)', short: 'Khuyến Lương' },
-  { id: 'hoang-thach', name: 'Bến Nhà Máy Hoàng Thạch', sub: 'Hải Dương • Sông Kinh Thầy (Km 55+700)', short: 'Hoàng Thạch' },
+  { id: 'doan-xa', name: 'Bến Cảng Đoạn Xá', sub: 'Hải Phòng • Sông Cấm (Km 00+000)', short: 'Đoạn Xá', km: 0 },
+  { id: 'pha-lai', name: 'Bến Nhà Máy Phả Lại', sub: 'Hải Dương • Sông Kinh Thầy (Km 68+400)', short: 'Phả Lại', km: 68.4 },
+  { id: 'ninh-phuc', name: 'Cảng Ninh Phúc', sub: 'Ninh Bình • Sông Đáy (Km 92+200)', short: 'Ninh Phúc', km: 92.2 },
+  { id: 'viet-tri', name: 'Cảng Việt Trì', sub: 'Phú Thọ • Sông Lô (Km 74+000)', short: 'Việt Trì', km: 74.0 },
+  { id: 'khuyen-luong', name: 'Cảng Khuyến Lương', sub: 'Hà Nội • Sông Hồng (Km 15+300)', short: 'Khuyến Lương', km: 15.3 },
+  { id: 'hoang-thach', name: 'Bến Nhà Máy Hoàng Thạch', sub: 'Hải Dương • Sông Kinh Thầy (Km 55+700)', short: 'Hoàng Thạch', km: 55.7 },
 ]
 
-export const SCENARIOS = [
+// Đơn giá gợi ý mặc định theo nhóm hàng (VND/Tấn) — người dùng có thể sửa lại
+export const CARGO_TYPES = [
+  { name: 'Clinker rời', unitPrice: 138000 },
+  { name: 'Than cám', unitPrice: 118000 },
+  { name: 'Cát san lấp / Đá', unitPrice: 95000 },
+  { name: 'Container rỗng/đầy', unitPrice: 165000 },
+]
+
+// 3 phương án vận hành: chỉ mô tả HỆ SỐ áp dụng lên dữ liệu người dùng nhập,
+// KHÔNG còn số liệu doanh thu/chi phí/an toàn cố định — các số liệu này được
+// tính lại theo thời gian thực trong store/tripState.js (computeScenario()).
+export const MODES = [
   {
     key: 'A',
-    title: 'Phương án A: Đón Đỉnh Triều & Giữ Đủ Tải (400T)',
+    title: 'Phương án A: Tải Trọng Tiêu Chuẩn (Đón Triều)',
     tag: 'Khuyến Nghị AI',
     tagClass: 'bg-tertiary text-on-tertiary',
-    desc: 'Khởi hành 09:00 đón đỉnh triều Cửa Cấm (10:15) và vượt cạn Sông Kinh Thầy lúc 11:45 với mớn nước hở an toàn +40cm.',
-    profit: '+19.4tr',
-    profitPct: '(+35.1%)',
-    duration: '5h 45p',
-    durationRaw: '5h 45p',
-    safety: '94/100 (Thấp)',
-    safetyScore: 94,
-    fuel: '820L dầu',
-    fuelLiters: 820,
-    footNote: 'Đang áp dụng cho chuyến này',
-    etd: '09:00',
-    eta: '14:45',
-    revenue: 55200000,
-    cost: 35800000,
-    profitValue: 19400000,
-    profitPctValue: 35.1,
-    fuelCost: '17.63tr',
-    etdNote: 'Khuyến nghị: Rời bến 09:00 đón đỉnh triều Cửa Cấm lúc 10:15',
+    desc: 'Giữ nguyên khối lượng đã nhập, chạy tốc độ kinh tế và canh giờ xuất bến theo con nước để tối ưu an toàn.',
+    weightMultiplier: 1,
+    speedMultiplier: 1,
+    etdOffsetMin: 0,
+    fuelFactor: 1,
+    footNote: 'Cân bằng giữa lợi nhuận và an toàn',
   },
   {
     key: 'B',
-    title: 'Phương án B: Giảm Tải Vượt Cạn Sớm (320T)',
-    tag: 'Rủi Ro Cực Thấp',
+    title: 'Phương án B: Giảm Tải Vượt Cạn Sớm',
+    tag: 'Rủi Ro Thấp',
     tagClass: 'bg-surface-container text-on-surface-variant',
-    desc: 'Khởi hành ngay lúc 07:30, hạ bớt 80T tải để mớn cạn chỉ 2.15m vượt mọi điểm nông trước triều rút.',
-    profit: '+12.6tr',
-    profitPct: '(+26.8%)',
-    duration: '4h 30p',
-    durationRaw: '4h 30p',
-    safety: '98/100',
-    safetyScore: 98,
-    fuel: '690L dầu',
-    fuelLiters: 690,
-    footNote: 'Sản lượng giao thấp hơn 20%',
-    etd: '07:30',
-    eta: '12:00',
-    revenue: 44160000,
-    cost: 31560000,
-    profitValue: 12600000,
-    profitPctValue: 26.8,
-    fuelCost: '14.85tr',
-    etdNote: 'Rời bến sớm 07:30 để vượt cạn trước khi triều rút',
+    desc: 'Giảm 20% khối lượng xếp hàng để giảm mớn nước, khởi hành sớm hơn 90 phút, vượt các điểm cạn an toàn hơn.',
+    weightMultiplier: 0.8,
+    speedMultiplier: 1.06,
+    etdOffsetMin: -90,
+    fuelFactor: 1,
+    footNote: 'Sản lượng giao thấp hơn, an toàn cao hơn',
   },
   {
     key: 'C',
-    title: 'Phương án C: Chạy Tốc Độ Tối Đa (Max Speed)',
+    title: 'Phương án C: Chạy Tốc Độ Tối Đa',
     tag: 'Giao Hỏa Tốc',
     tagClass: 'bg-surface-container text-on-surface-variant',
-    desc: 'Giữ nguyên 400T tải, tăng công suất máy đạt 16.5 km/h, đến đích trước 14:05 (tiết kiệm 40 phút) kèm phụ thu dầu.',
-    profit: '+17.6tr',
-    profitPct: '(+31.8%)',
-    duration: '5h 05p (-40p)',
-    durationRaw: '5h 05p',
-    safety: '89/100',
-    safetyScore: 89,
-    fuel: '920L (+1.8tr)',
-    fuelLiters: 920,
+    desc: 'Giữ nguyên khối lượng đã nhập, tăng công suất máy để rút ngắn thời gian chạy; tiêu hao nhiên liệu tăng theo bình phương tốc độ.',
+    weightMultiplier: 1,
+    speedMultiplier: 1.35,
+    etdOffsetMin: 0,
+    fuelFactor: 1,
     footNote: 'Áp dụng khi cần giải phóng bến gấp',
-    etd: '09:00',
-    eta: '14:05',
-    revenue: 55200000,
-    cost: 37600000,
-    profitValue: 17600000,
-    profitPctValue: 31.8,
-    fuelCost: '19.83tr',
-    etdNote: 'Chạy tối đa công suất để rút ngắn hành trình 40 phút',
   },
 ]
+
+// Hằng số dùng cho công thức tính toán P&L / an toàn
+export const CONSTANTS = {
+  NAV_SPEED_FACTOR: 0.85, // hệ số suy giảm tốc độ thực tế do dòng chảy/con nước so với tốc độ kinh tế của tàu
+  FUEL_PRICE_PER_LITER: 21500, // đ/lít dầu DO
+  FUEL_RATE_PER_DWT: 0.28, // lít/giờ cho mỗi DWT khi chạy đúng tốc độ định mức của tàu
+  CREW_COST_PER_HOUR: 950000, // đ/giờ chạy (lương kíp lái)
+  PORT_FEE_BASE: 6500000, // đ/chuyến, phí cảng bến cố định
+  PORT_FEE_PER_TON: 3500, // đ/tấn hàng xếp, phần phí cảng bến biến đổi
+  CONTINGENCY_RATE: 0.06, // 6% dự phòng trên (nhiên liệu + cảng bến + lương)
+  CHANNEL_DEPTH_M: 2.85, // độ sâu khả dụng tại điểm cạn tham chiếu (Sông Kinh Thầy Km 24)
+  BRIDGE_CLEARANCE_M: 7.2, // tĩnh không thực tế tại cầu tham chiếu (Cầu Phú Lương Km 45.2)
+  TIDE_PEAK_TIME: '10:15', // giờ đỉnh triều tham chiếu (Trạm Hòn Dấu)
+}
