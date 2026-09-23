@@ -75,7 +75,7 @@ function closeMenu() {
           <img
             alt="Profile"
             class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant"
-            src="https://lh3.googleusercontent.com/aida/AEtjO1X8YF7UDyNtdAB0tP_cgRAp9ySh_rKeoIMxWXYX9E21HGBgaG4jnbmvu-FTIe6kDCTYJl0OOoj4Lhrrbme_bsCSWcWJtFhxkEEQn-UILmOpHmFtVwsJXbb93rvv5_vwTHCobhSWyD55ma2th7S12oghsjYBAaHyOOpiYSbQDs687Dgyzuu7O6JbnYvhKaAsFLkMDloo6oDMh8ve7gM6LM9mQuanuUTFzOpfmDUQHW0IGkqfKYtMQlgouYU"
+            src="../assets/user.png"
           />
         </div>
 
@@ -127,7 +127,7 @@ function closeMenu() {
             <img
               alt="Profile"
               class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1X8YF7UDyNtdAB0tP_cgRAp9ySh_rKeoIMxWXYX9E21HGBgaG4jnbmvu-FTIe6kDCTYJl0OOoj4Lhrrbme_bsCSWcWJtFhxkEEQn-UILmOpHmFtVwsJXbb93rvv5_vwTHCobhSWyD55ma2th7S12oghsjYBAaHyOOpiYSbQDs687Dgyzuu7O6JbnYvhKaAsFLkMDloo6oDMh8ve7gM6LM9mQuanuUTFzOpfmDUQHW0IGkqfKYtMQlgouYU"
+              src="../assets/user.png"
             />
             <div class="flex flex-col">
               <span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Trần Hoàng Nam</span>
