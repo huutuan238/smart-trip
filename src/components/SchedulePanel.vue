@@ -9,7 +9,7 @@ const { state, currentScenario, isReady, CONSTANTS } = useTripState()
     <div class="flex items-center justify-between pb-space-sm mb-space-sm bg-surface-container-low -mx-space-md -mt-space-md p-space-sm rounded-t-lg">
       <div class="flex items-center gap-space-xs">
         <span class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-sm font-semibold">4</span>
-        <span class="font-headline-sm text-headline-sm text-on-surface">Lịch Trình Vận Hành &amp; Giờ Xuất Bến</span>
+        <span class="font-headline-sm text-headline-sm text-on-surface">Lịch Trình</span>
       </div>
       <span class="font-label-sm text-label-sm text-on-surface-variant">Nhập ngày &amp; giờ rời bến dự kiến</span>
     </div>

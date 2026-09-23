@@ -16,31 +16,31 @@ const {
 
 const steps = computed(() => [
   {
-    code: 'B.1',
+    code: '1.',
     title: 'Phương tiện',
     done: isVesselDone.value,
     value: isVesselDone.value ? `Tàu ${vessel.value.name}` : 'Chưa chọn',
   },
   {
-    code: 'B.2',
+    code: '2.',
     title: 'Hàng hoá',
     done: isCargoDone.value,
     value: isCargoDone.value ? `${state.cargoType} • ${state.weightTons}T` : 'Chưa nhập',
   },
   {
-    code: 'B.3',
+    code: '3.',
     title: 'Tuyến luồng',
     done: isRouteDone.value,
     value: isRouteDone.value ? `${origin.value.short} - ${destination.value.short}` : 'Chưa chọn',
   },
   {
-    code: 'B.4',
+    code: '4.',
     title: 'Giờ rời bến',
     done: isScheduleDone.value,
     value: isScheduleDone.value ? `${state.etdTime}${state.etdDate ? ' - ' + state.etdDate : ''}` : 'Chưa nhập',
   },
   {
-    code: 'B.5',
+    code: '5.',
     title: 'P&L',
     done: !!currentScenario.value,
     value: currentScenario.value
@@ -48,7 +48,7 @@ const steps = computed(() => [
       : 'Chưa có dữ liệu',
   },
   {
-    code: 'B.6',
+    code: '6.',
     title: 'An toàn',
     done: !!currentScenario.value,
     value: currentScenario.value ? `${currentScenario.value.safetyScore} Điểm an toàn` : 'Chưa kiểm tra',
@@ -122,7 +122,7 @@ const scenarioLabel = computed(() =>
             <span class="material-symbols-outlined text-[16px]">tune</span>
           </div>
           <div class="min-w-0">
-            <div class="font-label-sm text-label-sm text-primary uppercase leading-none font-semibold">B.7 Đề Xuất</div>
+            <div class="font-label-sm text-label-sm text-primary uppercase leading-none font-semibold">7. Đề Xuất</div>
             <div class="font-label-md text-label-md text-primary truncate font-bold">{{ scenarioLabel }}</div>
           </div>
         </div>

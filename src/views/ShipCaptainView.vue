@@ -420,7 +420,7 @@
           </div>
           <div class="flex flex-col items-end">
             <span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-medium"
-              >Tem thời gian</span
+              >Thời gian</span
             >
             <span class="font-label-md text-label-md font-bold text-primary">{{ waitingModalTime }}</span>
           </div>
@@ -536,7 +536,7 @@
             </div>
           </div>
           <div class="flex flex-col items-end">
-            <span class="font-label-sm text-label-sm text-error uppercase font-bold">Tem thời gian</span>
+            <span class="font-label-sm text-label-sm text-error uppercase font-bold">Thời gian</span>
             <span class="font-label-md text-label-md font-bold text-error">{{ emergencyModalTime }}</span>
           </div>
         </div>

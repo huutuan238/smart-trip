@@ -11,7 +11,7 @@ const { openModal } = useModalState()
     <div class="flex items-center justify-between pb-space-sm mb-space-sm bg-surface-container-low -mx-space-md -mt-space-md p-space-sm rounded-t-lg">
       <div class="flex items-center gap-space-xs">
         <span class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-sm font-semibold">1</span>
-        <span class="font-headline-sm text-headline-sm text-on-surface">Hồ Sơ Phương Tiện Thủy</span>
+        <span class="font-headline-sm text-headline-sm text-on-surface">Chọn Phương Tiện</span>
         <span class="px-2 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-medium">VR-SB Khả dụng</span>
       </div>
       <button
