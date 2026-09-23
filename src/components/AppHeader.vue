@@ -22,7 +22,7 @@ function closeMenu() {
   <header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="h-16 w-full px-4 md:px-margin flex items-center justify-between gap-space-md">
       <div class="flex items-center gap-space-sm md:gap-space-lg shrink-0 min-w-0">
-        <div class="flex items-center gap-space-sm min-w-0">
+        <div class="bg-on-background p-1.5 rounded-lg shadow-sm flex items-center ">
           <router-link to="/">
           <img
             alt="SmartTrip IWT logo"
@@ -30,14 +30,6 @@ function closeMenu() {
             src="https://lh3.googleusercontent.com/aida/AEtjO1XI-9jeKrti5cU30KhH1ZafcNfL28pKuWjDudTjvKHT6EJA0AuRJ7PQo4DZ4pwbxOxsTS814GfB7PD8XdsdAh4Fkb0rQeOiOBEhMvsEeAzSOxIvJjaVK2-cAN9vmuNcXD_M9uz_bFp8gILlhkLkHMZO3fiNdyJi6IS6RjByT45auN9UvA8e5VJJoEC-3HmYDM97YwdWFpDoTFIQQoKsVvJQJ10PjSxLlHrwX8Vq7t9IfbprFh4FZ7cMvg"
           />
         </router-link>
-          <div class="flex flex-col min-w-0">
-            <span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none truncate">
-              SmartTrip <span class="text-secondary">IWT</span>
-            </span>
-            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider hidden sm:block">
-              Hàng hải số ĐTNĐ
-            </span>
-          </div>
         </div>
         <div class="h-6 w-[1px] bg-outline-variant/50 hidden lg:block"></div>
         <nav class="hidden xl:flex items-center gap-space-xs">

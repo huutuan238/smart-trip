@@ -801,7 +801,7 @@ import { RouterLink } from 'vue-router'
           <div
             class="flex flex-wrap items-center justify-center gap-space-md"
           >
-            <<router-link
+            <router-link
               class="px-space-lg py-3.5 bg-primary text-on-primary font-label-lg text-label-lg rounded-xl shadow-md hover:bg-primary-container transition-all flex items-center gap-space-xs"
               to="tao-chuyen-moi"
             >
