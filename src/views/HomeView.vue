@@ -388,7 +388,7 @@ import { RouterLink } from 'vue-router'
                 <h3
                   class="font-headline-md text-headline-md text-on-surface font-bold mb-space-sm"
                 >
-                  Giám Sát Ngoại Lệ (Management by Exception)
+                  Giám Sát Ngoại Lệ
                 </h3>
                 <p
                   class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-space-md"
