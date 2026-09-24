@@ -27,7 +27,7 @@ function closeMenu() {
           <img
             alt="SmartTrip IWT logo"
             class="h-7 md:h-8 w-auto object-contain shrink-0"
-            src="https://lh3.googleusercontent.com/aida/AEtjO1XI-9jeKrti5cU30KhH1ZafcNfL28pKuWjDudTjvKHT6EJA0AuRJ7PQo4DZ4pwbxOxsTS814GfB7PD8XdsdAh4Fkb0rQeOiOBEhMvsEeAzSOxIvJjaVK2-cAN9vmuNcXD_M9uz_bFp8gILlhkLkHMZO3fiNdyJi6IS6RjByT45auN9UvA8e5VJJoEC-3HmYDM97YwdWFpDoTFIQQoKsVvJQJ10PjSxLlHrwX8Vq7t9IfbprFh4FZ7cMvg"
+            src="../assets/logo.jpg"
           />
         </router-link>
         </div>
